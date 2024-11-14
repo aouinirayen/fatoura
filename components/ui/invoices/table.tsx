@@ -2,74 +2,18 @@
 import Image from "next/image";
 import { SendInvoice, ViewInvoice } from "@/components/ui/invoices/buttons";
 import InvoiceStatus from "@/components/ui/invoices/status";
+import { useEffect, useState } from "react";
 
-export default function InvoicesTable() {
-  const invoices = [{
-    id: "1",
-    name: "haikel",
-    email: "name@gmail.com",
-    seller_name: "mcdo",
-    amount: 700,
-    image_url: "https://www.google.com",
-    date: new Date(),
-    status: "pending"
-  }, {
-    id: "1",
-    name: "haikel",
-    email: "name@gmail.com",
-    seller_name: "mcdo",
-    amount: 700,
-    image_url: "https://www.google.com",
-    date: new Date(),
-    status: "pending"
-  }, {
-    id: "1",
-    name: "haikel",
-    email: "name@gmail.com",
-    seller_name: "mcdo",
-    amount: 700,
-    image_url: "https://www.google.com",
-    date: new Date(),
-    status: "pending"
-  }, {
-    id: "1",
-    name: "haikel",
-    email: "name@gmail.com",
-    seller_name: "mcdo",
-    amount: 700,
-    image_url: "https://www.google.com",
-    date: new Date(),
-    status: "pending"
-  },
-    {
-      id: "2",
-      name: "haikel",
-      email: "name@gmail.com",
-      seller_name: "mcdo",
-      amount: 200,
-      image_url: "https://www.google.com",
-      date: new Date(),
-      status: "paid"
-    },
-    {
-      id: "3",
-      name: "haikel",
-      email: "name@gmail.com",
-      seller_name: "mcdo",
-      amount: 200,
-      image_url: "https://www.google.com",
-      date: new Date(),
-      status: "paid"
-    }
-
-  ];
-
+export default function InvoicesTable({invoices}: {invoices: any[]}) {
+  useEffect(() => {
+    console.log(invoices);
+  }, [invoices]);
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {invoices?.map((invoice) => (
+            {invoices.map((invoice) => (
               <div
                 key={invoice.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
@@ -142,7 +86,7 @@ export default function InvoicesTable() {
             </tr>
             </thead>
             <tbody className="bg-white">
-            {invoices?.map((invoice) => (
+            {invoices.map((invoice) => (
               <tr
                 key={invoice.id}
                 className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -169,7 +113,7 @@ export default function InvoicesTable() {
                   {invoice.amount}
                 </td>
                 <td className="whitespace-nowrap px-3 py-3">
-                  invoice.date
+                  {invoice.date.toLocaleDateString()}
                 </td>
                 <td className="whitespace-nowrap px-3 py-3">
                   <InvoiceStatus status={invoice.status} />

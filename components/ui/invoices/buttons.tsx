@@ -11,7 +11,7 @@ import Link from "next/link";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
-
+import {Tooltip} from "@nextui-org/tooltip";
 interface FilterInvoiceProps {
   show: () => void,
   setFilter?: (value: (((prevState: {}) => {}) | {})) => void,
@@ -87,18 +87,22 @@ export function ResetFilters({ onClick }: { onClick: () => void }) {
 export function SendInvoice({ id }: { id: string }) {
   return (
     <form>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
-        <span className="sr-only">Delete</span>
-        <PaperAirplaneIcon className="w-5" />
-      </button>
+      <Tooltip color="primary" content={"Send"} className="capitalize">
+        <button className="rounded-md border p-2 hover:bg-gray-100">
+          <span className="sr-only">Delete</span>
+          <PaperAirplaneIcon className="w-5" />
+        </button>
+      </Tooltip>
     </form>
   );
 }
 
 export function ViewInvoice({ id }: { id: string }) {
   return (
-    <Link className="rounded-md border p-2 hover:bg-gray-100" href={`/dashboard/invoices/${id}/detail`}>
-      <EyeIcon className="w-5" />
-    </Link>
+    <Tooltip color="danger" content={"View"} className="capitalize">
+      <Link className="rounded-md border p-2 hover:bg-gray-100" href={`/dashboard/invoices/${id}/detail`}>
+        <EyeIcon className="w-5" />
+      </Link>
+    </Tooltip>
   );
 }
