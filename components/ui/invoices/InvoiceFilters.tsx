@@ -2,6 +2,8 @@ import React from 'react'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import FieldDropdownMenu from './FieldDropdownMenu';
+import StatusDropdownMenu from './StatusDropdownMenu';
+import {DatePicker} from "@nextui-org/date-picker";
 
 const Fields = [
     "name",
@@ -10,6 +12,11 @@ const Fields = [
     "amount",
     "date",
     "status"
+]
+
+const status = [
+    "pending",
+    "paid"
 ]
 
 const textFields = [
@@ -56,48 +63,62 @@ function InvoiceFilters({invoices, setInvoices}: {invoices: any[], setInvoices: 
     const [textContent, setTextContent] = React.useState<string>("")
 
     const handleConfirmButtonClick = () => {
-        if (textFields.includes(selectedFilter)) {
+        if(selectedFilter === "date"){
             const filteredInvoices = invoices.filter(
-                invoice => invoice[selectedFilter].toString().toLowerCase() === textContent.toLowerCase()
+                invoice => invoice[selectedFilter].toLocaleDateString() === textContent
             )
+            console.log(filteredInvoices)
             setInvoices((prev: any) => filteredInvoices)
-        } else {
-            if (selectedOperator in operatorSymbolsMap) {
-                const operatorSymbol = operatorSymbolsMap[selectedOperator as OperatorType]
-    
-                const filteredInvoices = invoices.filter(invoice => {
-                    let fieldValue = invoice[selectedFilter]
-                    const compareValue = isNaN(Number(textContent)) ? textContent : Number(textContent)
-
-                    if (typeof fieldValue === 'string' && !isNaN(Number(fieldValue))) {
-                        fieldValue = Number(fieldValue)
-                    }
-                    console.log({operatorSymbol, compareValue, fieldValue})
-                    switch (operatorSymbol) {
-                        case '==':
-                            return fieldValue == compareValue
-                        case '!=':
-                            return fieldValue != compareValue
-                        case '>':
-                            return fieldValue > compareValue
-                        case '<':
-                            return fieldValue < compareValue
-                        case '>=':
-                            return fieldValue >= compareValue
-                        case '<=':
-                            return fieldValue <= compareValue
-                        default:
-                            console.error("Invalid operator")
-                            return false
-                    }
-                })
-                console.log(filteredInvoices)
+        }
+        else{
+            if (textFields.includes(selectedFilter)) {
+                const filteredInvoices = invoices.filter(
+                    invoice => invoice[selectedFilter].toString().toLowerCase() === textContent.toLowerCase()
+                )
                 setInvoices((prev: any) => filteredInvoices)
             } else {
-                console.error("Invalid operator selected")
+                if (selectedOperator in operatorSymbolsMap) {
+                    const operatorSymbol = operatorSymbolsMap[selectedOperator as OperatorType]
+        
+                    const filteredInvoices = invoices.filter(invoice => {
+                        let fieldValue = invoice[selectedFilter]
+                        const compareValue = isNaN(Number(textContent)) ? textContent : Number(textContent)
+    
+                        if (typeof fieldValue === 'string' && !isNaN(Number(fieldValue))) {
+                            fieldValue = Number(fieldValue)
+                        }
+                        console.log({operatorSymbol, compareValue, fieldValue})
+                        switch (operatorSymbol) {
+                            case '==':
+                                return fieldValue == compareValue
+                            case '!=':
+                                return fieldValue != compareValue
+                            case '>':
+                                return fieldValue > compareValue
+                            case '<':
+                                return fieldValue < compareValue
+                            case '>=':
+                                return fieldValue >= compareValue
+                            case '<=':
+                                return fieldValue <= compareValue
+                            default:
+                                console.error("Invalid operator")
+                                return false
+                        }
+                    })
+                    console.log(filteredInvoices)
+                    setInvoices((prev: any) => filteredInvoices)
+                } else {
+                    console.error("Invalid operator selected")
+                }
             }
         }
+        
     }
+    const handleSelectStatus = (str: string) => {
+        setTextContent(prev => str)
+    }
+    console.log({selectedFilter, selectedOperator, textContent})
     return (
         <>
       <div className="flex flex-wrap gap-3">
@@ -121,8 +142,21 @@ function InvoiceFilters({invoices, setInvoices}: {invoices: any[], setInvoices: 
               <ModalHeader className="flex flex-col gap-1 text-center text-lg"> Invoice Filters </ModalHeader>
               <ModalBody>
                 <FieldDropdownMenu field={"champ"} items={Fields} selected={selectedFilter} handleSelect={handleSelect} />
-                <FieldDropdownMenu field={"operator"} items={operators} disabled={textFields.includes(selectedFilter)} handleSelect={handleSelectOperator} selected={selectedOperator} />
-                    <Input onChange={(e) => setTextContent(e.target.value)} type={textFields.includes(selectedFilter) ? "text" : "number"} label="Filter Value" variant='bordered' className="h-[3.5rem]" />
+                <FieldDropdownMenu field={"operator"} items={operators} disabled={textFields.includes(selectedFilter) || selectedFilter === "date"} handleSelect={handleSelectOperator} selected={selectedOperator} />
+                {
+                    selectedFilter === "status" ? (
+                        <StatusDropdownMenu items={status} selected={textContent} handleSelect={handleSelectStatus} />
+                    )
+                    :
+                    selectedFilter === "date" ? (
+                        <DatePicker label="Invoice Date" className="" onChange={(e) => {setTextContent(`${e.month}/${e.day}/${e.year}`)}} />
+                    )
+                    :
+                    (
+                        <Input onChange={(e) => setTextContent(e.target.value)} type={textFields.includes(selectedFilter) ? "text" : "number"} label="Filter Value" variant='bordered' className="h-[3.5rem]" />
+                    )
+                    
+                }
               </ModalBody>
               <ModalFooter>
                 <Button color="secondary" variant="light" onPress={onClose}>
