@@ -118,7 +118,6 @@ function InvoiceFilters({invoices, setInvoices}: {invoices: any[], setInvoices: 
     const handleSelectStatus = (str: string) => {
         setTextContent(prev => str)
     }
-    console.log({selectedFilter, selectedOperator, textContent})
     return (
         <>
       <div className="flex flex-wrap gap-3">
