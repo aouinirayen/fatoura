@@ -244,7 +244,7 @@ export default function InvoicesPage() {
               if(!tag.value) return null
               tag.value === "pending" && tag.name === "status" ? tag.icon = <EllipsisHorizontalIcon className="w-4" /> : tag.value === "paid" && tag.name === "status" ? tag.icon = <BanknotesIcon className="w-4" /> : tag.icon = tag.icon
               return(
-                <span className="flex gap-1 items-center w-fit bg-black/90 hover:bg-black transition-all duration-100 cursor-default text-white rounded-md sm:text-sm text-xs py-1 px-4">
+                <span className="flex gap-1 items-center w-fit bg-default-900 hover:bg-default-900/90 text-default-100 transition-all duration-100 cursor-default rounded-md sm:text-sm text-xs py-1 px-4">
                   {tag.icon}
                   <span>{tag.operator ? tag.operator : ""}</span>
                   <span>{tag.value}</span>
