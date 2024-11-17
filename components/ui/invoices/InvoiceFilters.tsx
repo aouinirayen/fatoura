@@ -70,17 +70,6 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
     
 
     const [textContent, setTextContent] = React.useState<string>("")
-    const handleTextContentChange = (str: string) => {
-        if(selectedFilter && selectedFilter !== "amount"){
-            setTextContent(prev => str)
-            setTags(selectedFilter, str)
-        }
-        if(selectedFilter === "amount" && selectedOperator){
-            setTextContent(prev => str)
-            setTags(selectedFilter, Number(str), selectedOperator)
-        }
-    }
-
     const [textContents, setTextContents] = React.useState(initialTextContents)
     const handleSelectOperator = (str: string, item: string) => {
         setSelectedOperator(prev => str)
@@ -98,6 +87,7 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
             setTags(selectedFilter, Number(str), operatorSymbol === "==" ? "=" : operatorSymbol === "!=" ? "<>" : operatorSymbol)
         }
     }    
+
 
     const handleConfirmButtonClick = () => {
         if(selectedFilter === "date"){
@@ -150,11 +140,16 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
                 }
             }
         }
-        
     }
-    const handleSelectStatus = (str: string) => {
-        setTextContent(prev => str)
+
+    const CloseModal = () => {
+        onClose()
+        setTextContents(initialTextContents)
+        tags.forEach(tag => {
+            setTags(tag.name, null)
+        })
     }
+
     return (
         <>
         <div className="flex flex-wrap gap-3">
@@ -169,11 +164,11 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
         <Modal
             size={size} 
             isOpen={isOpen} 
-            onClose={onClose} 
+            onClose={CloseModal} 
             backdrop='blur'
         >
             <ModalContent>
-            {(onClose) => (
+            {(CloseModal) => (
                 <>
                 <ModalHeader className="flex flex-col gap-1 text-center text-lg"> Invoice Filters </ModalHeader>
                 <ModalBody>
@@ -194,14 +189,14 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
                         }
                     </div>
                     <FieldDropdownMenu field={"champ"} items={Fields} selected={selectedFilter} handleSelect={handleSelect} />
-                    <FieldDropdownMenu field={"operator"} items={operators} disabled={textFields.includes(selectedFilter) || selectedFilter === "date"} handleSelect={handleSelectOperator} selected={selectedOperator} />
+                    <FieldDropdownMenu field={"operator"} items={operators} disabled={!selectedFilter || textFields.includes(selectedFilter) || selectedFilter === "date"} handleSelect={handleSelectOperator} selected={selectedOperator} />
                     {
                         selectedFilter === "status" ? (
-                            <StatusDropdownMenu items={status} selected={textContent} handleSelect={handleSelectStatus} />
+                            <StatusDropdownMenu items={status} selected={textContents[selectedFilter as keyof typeof textContents] as string} handleSelect={handleTextContentsChange} />
                         )
                         :
                         selectedFilter === "date" ? (
-                            <DatePicker label="Invoice Date" className="" onChange={(e) => {setTextContent(`${e.month}/${e.day}/${e.year}`)}} />
+                            <DatePicker label="Invoice Date" className="" onChange={(e) => {handleTextContentsChange(e ? `${e.month}/${e.day}/${e.year}` : "", selectedFilter)}} />
                         )
                         :
                         (
@@ -210,7 +205,7 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
                     }
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="secondary" variant="light" onPress={onClose}>
+                    <Button color="secondary" variant="light" onPress={CloseModal}>
                     Close
                     </Button>
                     <Button onClick={handleConfirmButtonClick} color="primary" variant="light" onPress={onClose}>

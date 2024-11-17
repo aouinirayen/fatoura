@@ -2,7 +2,7 @@ import React from 'react'
 import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button} from "@nextui-org/react";
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
-function StatusDropdownMenu({selected, items, disabled, handleSelect}: {items: string[], disabled?: boolean, selected?: string, handleSelect: (str: string) => void}) {
+function StatusDropdownMenu({selected, items, disabled, handleSelect}: {items: string[], disabled?: boolean, selected?: string, handleSelect: (str: string, item: string) => void}) {
   return (
     <Dropdown isDisabled={disabled}>
       <DropdownTrigger disabled={disabled}>
@@ -31,7 +31,7 @@ function StatusDropdownMenu({selected, items, disabled, handleSelect}: {items: s
                 <DropdownItem
                     key={index} 
                     className={`capitalize font-semibold ${item === "paid" ? "bg-green-500/60 hover:bg-green-500 text-white" : "bg-gray-200/70 hover:bg-gray-200"}`}
-                    onPress={() => handleSelect(item)}
+                    onPress={() => handleSelect(item, "status")}
                 >
                 {item.replace("_", " ")}
                 </DropdownItem>
