@@ -1,11 +1,11 @@
 import React from 'react'
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
-import { AdjustmentsHorizontalIcon, EllipsisHorizontalIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import FieldDropdownMenu from './FieldDropdownMenu';
-import StatusDropdownMenu from './StatusDropdownMenu';
-import {DatePicker} from "@nextui-org/date-picker";
-import { Tags } from '@/pages/invoices';
-export type TextContentKeys = 'name' | 'email' | 'seller_name' | 'amount' | 'date' | 'status';
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react"
+import { AdjustmentsHorizontalIcon, EllipsisHorizontalIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import FieldDropdownMenu from './FieldDropdownMenu'
+import StatusDropdownMenu from './StatusDropdownMenu'
+import {DatePicker} from "@nextui-org/date-picker"
+import { Tags } from '@/pages/invoices'
+export type TextContentKeys = 'name' | 'email' | 'seller_name' | 'amount' | 'date' | 'status'
 
 const Fields = [
     "name",
@@ -20,7 +20,7 @@ const initialTextContents: Record<TextContentKeys, string | number> = {
     name: "",
     email: "",
     seller_name: "",
-    amount: 0,
+    amount: NaN,
     date: "",
     status: ""
 }
@@ -69,7 +69,6 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
     const [selectedOperator, setSelectedOperator] = React.useState<string>("")
     
 
-    const [textContent, setTextContent] = React.useState<string>("")
     const [textContents, setTextContents] = React.useState(initialTextContents)
     const handleSelectOperator = (str: string, item: string) => {
         setSelectedOperator(prev => str)
@@ -88,58 +87,60 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
         }
     }    
 
-
-    const handleConfirmButtonClick = () => {
-        if(selectedFilter === "date"){
-            const filteredInvoices = invoices.filter(
-                invoice => invoice[selectedFilter].toLocaleDateString() === textContent
+    const ClickConfirm = () => {
+        const filteredInvoices = invoices.filter(invoice => {
+            return (
+                (!textContents.name || invoice.name === textContents.name) &&
+                (!textContents.email || invoice.email === textContents.email) &&
+                (!textContents.seller_name || invoice.seller_name === textContents.seller_name) &&
+                (!textContents.date || invoice.date.toLocaleDateString() === textContents.date) &&
+                (!textContents.status || invoice.status === textContents.status)
             )
-            console.log(filteredInvoices)
-            setInvoices((prev: any) => filteredInvoices)
-        }
-        else{
-            if (textFields.includes(selectedFilter)) {
-                const filteredInvoices = invoices.filter(
-                    invoice => invoice[selectedFilter].toString().toLowerCase() === textContent.toLowerCase()
-                )
-                setInvoices((prev: any) => filteredInvoices)
-            } else {
-                if (selectedOperator in operatorSymbolsMap) {
-                    const operatorSymbol = operatorSymbolsMap[selectedOperator as OperatorType]
+        })
+        if(textContents.amount){
+            if (textContents.amount && selectedOperator && selectedOperator in operatorSymbolsMap) {
+                const operatorSymbol = operatorSymbolsMap[selectedOperator as OperatorType]
         
-                    const filteredInvoices = invoices.filter(invoice => {
-                        let fieldValue = invoice[selectedFilter]
-                        const compareValue = isNaN(Number(textContent)) ? textContent : Number(textContent)
-    
-                        if (typeof fieldValue === 'string' && !isNaN(Number(fieldValue))) {
-                            fieldValue = Number(fieldValue)
-                        }
-                        console.log({operatorSymbol, compareValue, fieldValue})
-                        switch (operatorSymbol) {
-                            case '==':
-                                return fieldValue == compareValue
-                            case '!=':
-                                return fieldValue != compareValue
-                            case '>':
-                                return fieldValue > compareValue
-                            case '<':
-                                return fieldValue < compareValue
-                            case '>=':
-                                return fieldValue >= compareValue
-                            case '<=':
-                                return fieldValue <= compareValue
-                            default:
-                                console.error("Invalid operator")
-                                return false
-                        }
-                    })
-                    setInvoices((prev: any) => filteredInvoices)
-                    setTextContent("")
-                } else {
-                    console.error("Invalid operator selected")
-                }
+                const amountFilteredInvoices = filteredInvoices.filter(invoice => {
+                    let fieldValue = invoice.amount
+                    const compareValue = isNaN(Number(textContents.amount)) ? textContents.amount : Number(textContents.amount)
+        
+                    if (typeof fieldValue === 'string' && !isNaN(Number(fieldValue))) {
+                        fieldValue = Number(fieldValue)
+                    }
+        
+                    console.log({ operatorSymbol, compareValue, fieldValue })
+        
+                    switch (operatorSymbol) {
+                        case '==':
+                            return fieldValue == compareValue
+                        case '!=':
+                            return fieldValue != compareValue
+                        case '>':
+                            return fieldValue > compareValue
+                        case '<':
+                            return fieldValue < compareValue
+                        case '>=':
+                            return fieldValue >= compareValue
+                        case '<=':
+                            return fieldValue <= compareValue
+                        default:
+                            console.error("Invalid operator")
+                            return false
+                    }
+                })
+                setInvoices(amountFilteredInvoices)
+            } else {
+                console.error("Invalid operator selected or amount field missing")
             }
+        }else{
+            setInvoices(filteredInvoices)
         }
+    }
+    
+    const removeTag = (tag: string) => {
+        setTags(tag, null)
+        setTextContents((prev: any) => ({...prev, [tag]: ""}))
     }
 
     const CloseModal = () => {
@@ -182,7 +183,7 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
                                     {tag.icon}
                                     <span>{tag.operator ? tag.operator : ""}</span>
                                     <span>{tag.value}</span>
-                                    <XMarkIcon className="w-3 cursor-pointer" />
+                                    <XMarkIcon className="w-3 cursor-pointer" onClick={()=>removeTag(tag.name)} />
                                 </span>
                             )
                             })
@@ -208,7 +209,7 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
                     <Button color="secondary" variant="light" onPress={CloseModal}>
                     Close
                     </Button>
-                    <Button onClick={handleConfirmButtonClick} color="primary" variant="light" onPress={onClose}>
+                    <Button onClick={ClickConfirm} color="primary" variant="light" onPress={onClose}>
                     Confirm Changes
                     </Button>
                 </ModalFooter>
