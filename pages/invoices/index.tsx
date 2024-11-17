@@ -1,15 +1,30 @@
-import { title } from "@/components/primitives";
-import DefaultLayout from "@/layouts/default";
-import InvoicePage from "@/components/ui/invoices/invoice-page";
-import InvoicesTable from "@/components/ui/invoices/table";
-import React, { useState } from "react";
-import { BanknotesIcon, CalendarDaysIcon, CurrencyDollarIcon, EllipsisHorizontalIcon, EnvelopeIcon, UserIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { title } from "@/components/primitives"
+import DefaultLayout from "@/layouts/default"
+import InvoicePage from "@/components/ui/invoices/invoice-page"
+import InvoicesTable from "@/components/ui/invoices/table"
+import React, { useState } from "react"
+import { BanknotesIcon, CalendarDaysIcon, CurrencyDollarIcon, EllipsisHorizontalIcon, EnvelopeIcon, UserIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline"
+
 export type Tags = {
-  name: string;
-  value: string | number | null;
-  operator?: string;
-  icon: JSX.Element;
+  name: string
+  value: string | number | null
+  operator?: string
+  icon: JSX.Element
 }[]
+
+export type TextContentKeys = 'name' | 'email' | 'seller_name' | 'amount' | 'date' | 'status'
+
+export const operatorSymbolsMap = {
+  "Equals": "==",
+  "Not Equals": "!=",
+  "Bigger Than": ">",
+  "Smaller Than": "<",
+  "Bigger or Equals": ">=",
+  "Smaller or Equals": "<=",
+}
+
+export type OperatorType = keyof typeof operatorSymbolsMap
+
 const initialInvoices = [{
   id: "1",
   name: "haikel",
@@ -103,12 +118,108 @@ const InitialTags: Tags = [
   }
 ]
 
+const initialTextContents: Record<TextContentKeys, string | number> = {
+  name: "",
+  email: "",
+  seller_name: "",
+  amount: NaN,
+  date: "",
+  status: ""
+}
+
 export default function InvoicesPage() {
   const [invoices, setInvoices] = useState(initialInvoices)
   const [tags, setTags] = useState(InitialTags)
+  
+  const [textContents, setTextContents] = React.useState(initialTextContents)
+
   const clearFilters = () => {
     setInvoices(prev => [...initialInvoices])
+    setTags(prev => {
+      return prev.map(tag => {
+        return {
+          ...tag,
+          value: null,
+          operator: ""
+        }
+      })
+    })
+    setTextContents(initialTextContents)
   }
+
+  const removeTag = (tagName: string) => {
+    setTags(prev => {
+      return prev.map(tag => {
+        if (tag.name === tagName) {
+          return { ...tag, value: null, operator: "" }
+        }
+        return tag
+      })
+    })
+  
+    setTextContents(prev => {
+      const updatedTextContents: any = { ...prev }
+      if (updatedTextContents[tagName] !== undefined) {
+        updatedTextContents[tagName] = tagName === 'amount' ? NaN : ''
+      }
+      return updatedTextContents
+    })
+  
+    const filteredInvoices = initialInvoices.filter((invoice: any) => {
+      return Object.keys(textContents).every((key) => {
+        if (key === tagName) return true
+  
+        const invoiceValue = invoice[key]
+        const textContentValue = textContents[key as keyof typeof textContents];
+  
+        if (key === 'amount' && !isNaN(Number(textContentValue))) {
+          const operator = tags.find(tag => tag.name === 'amount')?.operator
+          const selectedOperator = operator === "=" ? "==" 
+                                    : operator === "<>" ? "!=" 
+                                    : operator || "=="
+  
+          let fieldValue = invoice.amount
+          const compareValue = isNaN(Number(textContents.amount)) ? textContents.amount : Number(textContents.amount)
+  
+          if (typeof fieldValue === 'string' && !isNaN(Number(fieldValue))) {
+            fieldValue = Number(fieldValue)
+          }
+  
+          switch (selectedOperator) {
+            case '==':
+              return fieldValue == compareValue
+            case '!=':
+              return fieldValue != compareValue
+            case '>':
+              return fieldValue > compareValue
+            case '<':
+              return fieldValue < compareValue
+            case '>=':
+              return fieldValue >= compareValue
+            case '<=':
+              return fieldValue <= compareValue
+            default:
+              console.error("Invalid operator")
+              return false
+          }
+        }
+  
+        if (textContentValue && invoiceValue) {
+          if (typeof textContentValue === 'string' && textContentValue.trim() !== "") {
+            return invoiceValue.toLowerCase().includes(textContentValue.toLowerCase())
+          }
+          return invoiceValue === textContentValue
+        }
+  
+        return true 
+      })
+    })
+  
+    setInvoices(filteredInvoices)
+  }
+  
+  
+
   const handleSetTags = (tagName: string, tagvalue: string | null | number, operator?: string) => {
     setTags(prev => {
       return prev.map(tag => {
@@ -126,7 +237,7 @@ export default function InvoicesPage() {
   return (
     <DefaultLayout>
       <section className="flex flex-col justify-center py-8 ">
-        <InvoicePage tags={tags} setTags={handleSetTags} onclear={clearFilters} invoices={invoices} setInvoices={setInvoices}></InvoicePage>
+        <InvoicePage initialTextContents={initialTextContents} textContents={textContents} setTextContents={setTextContents} tags={tags} setTags={handleSetTags} onclear={clearFilters} invoices={invoices} setInvoices={setInvoices}></InvoicePage>
         <div className="w-full flex gap-2 flex-wrap my-2">
           {
             tags.map((tag) => {
@@ -137,7 +248,7 @@ export default function InvoicesPage() {
                   {tag.icon}
                   <span>{tag.operator ? tag.operator : ""}</span>
                   <span>{tag.value}</span>
-                  <XMarkIcon className="w-3 cursor-pointer" />
+                  <XMarkIcon className="w-3 cursor-pointer" onClick={()=>removeTag(tag.name)} />
                 </span>
               )
             })
@@ -146,5 +257,5 @@ export default function InvoicesPage() {
         <InvoicesTable invoices={invoices}></InvoicesTable>
       </section>
     </DefaultLayout>
-  );
+  )
 }

@@ -4,8 +4,7 @@ import { AdjustmentsHorizontalIcon, EllipsisHorizontalIcon, XMarkIcon } from '@h
 import FieldDropdownMenu from './FieldDropdownMenu'
 import StatusDropdownMenu from './StatusDropdownMenu'
 import {DatePicker} from "@nextui-org/date-picker"
-import { Tags } from '@/pages/invoices'
-export type TextContentKeys = 'name' | 'email' | 'seller_name' | 'amount' | 'date' | 'status'
+import { operatorSymbolsMap, OperatorType, Tags, TextContentKeys } from '@/pages/invoices'
 
 const Fields = [
     "name",
@@ -15,15 +14,6 @@ const Fields = [
     "date",
     "status"
 ]
-
-const initialTextContents: Record<TextContentKeys, string | number> = {
-    name: "",
-    email: "",
-    seller_name: "",
-    amount: NaN,
-    date: "",
-    status: ""
-}
 
 const status = [
     "pending",
@@ -45,18 +35,7 @@ const operators = [
     "Smaller or Equals",
 ]
 
-const operatorSymbolsMap = {
-    "Equals": "==",
-    "Not Equals": "!=",
-    "Bigger Than": ">",
-    "Smaller Than": "<",
-    "Bigger or Equals": ">=",
-    "Smaller or Equals": "<=",
-}
-
-type OperatorType = keyof typeof operatorSymbolsMap
-
-function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[], setInvoices: any, tags: Tags, setTags: (tagName: string, tagvalue: string | null | number, operator?: string) => void}) {
+function InvoiceFilters({invoices, setInvoices, tags, setTags, textContents, setTextContents, initialTextContents}: {invoices: any[], setInvoices: any, tags: Tags, setTags: (tagName: string, tagvalue: string | null | number, operator?: string) => void, textContents: any, setTextContents: any, initialTextContents: Record<TextContentKeys, string | number>}) {
     const { isOpen, onClose, onOpen } = useDisclosure()
     const size = '4xl'
     const handleOpen = () => {
@@ -69,7 +48,6 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
     const [selectedOperator, setSelectedOperator] = React.useState<string>("")
     
 
-    const [textContents, setTextContents] = React.useState(initialTextContents)
     const handleSelectOperator = (str: string, item: string) => {
         setSelectedOperator(prev => str)
         const operatorSymbol = operatorSymbolsMap[str as OperatorType]
@@ -108,8 +86,6 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags}: {invoices: any[]
                     if (typeof fieldValue === 'string' && !isNaN(Number(fieldValue))) {
                         fieldValue = Number(fieldValue)
                     }
-        
-                    console.log({ operatorSymbol, compareValue, fieldValue })
         
                     switch (operatorSymbol) {
                         case '==':
