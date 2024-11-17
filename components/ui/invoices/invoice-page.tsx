@@ -3,8 +3,9 @@ import { ResetFilters, FilterInvoice } from "@/components/ui/invoices/buttons";
 import { useEffect, useState } from "react";
 import Filter from "@/components/ui/invoices/filters";
 import InvoiceFilters from "./InvoiceFilters";
+import { Tags } from "@/pages/invoices";
 
-export default function InvoicePage({invoices, setInvoices, onclear}: {invoices: any[], setInvoices: any, onclear: any}) {
+export default function InvoicePage({invoices, setInvoices, onclear, tags, setTags}: {invoices: any[], setInvoices: any, onclear: any, tags: Tags, setTags: (tagName: string, tagvalue: string | null | number, operator?: string) => void}) {
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<ApiFiltersResponse[]>([]);
   const [error, setError] = useState(null);
@@ -33,7 +34,7 @@ export default function InvoicePage({invoices, setInvoices, onclear}: {invoices:
   return (
     <>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <InvoiceFilters invoices={invoices} setInvoices={setInvoices} />
+        <InvoiceFilters setTags={setTags} tags={tags} invoices={invoices} setInvoices={setInvoices} />
         <ResetFilters onClick={onclear} />
       </div>
       {showFilters ? <div className="">
