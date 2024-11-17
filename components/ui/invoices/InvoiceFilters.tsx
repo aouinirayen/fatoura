@@ -177,7 +177,7 @@ function InvoiceFilters({invoices, setInvoices, tags, setTags, textContents, set
                         )
                         :
                         (
-                            <Input disabled={!selectedFilter} value={textContents[selectedFilter as keyof typeof textContents] as string} onChange={(e) => handleTextContentsChange(e.target.value, selectedFilter)} type={textFields.includes(selectedFilter) ? "text" : "number"} label="Filter Value" variant={!selectedFilter ? "faded" : "bordered"} className="h-[3.5rem]" />
+                            <Input disabled={!selectedFilter || selectedFilter === "amount" && !selectedOperator} value={textContents[selectedFilter as keyof typeof textContents] as string} onChange={(e) => handleTextContentsChange(e.target.value, selectedFilter)} type={textFields.includes(selectedFilter) ? "text" : "number"} label="Filter Value" variant={!selectedFilter ? "faded" : "bordered"} className="h-[3.5rem]" />
                         )
                     }
                 </ModalBody>
