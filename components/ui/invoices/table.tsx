@@ -5,9 +5,7 @@ import InvoiceStatus from "@/components/ui/invoices/status";
 import { useEffect, useState } from "react";
 
 export default function InvoicesTable({invoices}: {invoices: any[]}) {
-  useEffect(() => {
-    console.log(invoices);
-  }, [invoices]);
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -47,7 +45,7 @@ export default function InvoicesTable({invoices}: {invoices: any[]}) {
                     <p>{invoice.date.getDate()}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <ViewInvoice id={invoice.id} />
+                    <ViewInvoice invoice={invoice} />
                   </div>
                 </div>
               </div>
@@ -121,7 +119,7 @@ export default function InvoicesTable({invoices}: {invoices: any[]}) {
                 <td className="whitespace-nowrap py-3 pl-6 pr-3">
                   <div className="flex justify-end gap-3">
                     <SendInvoice id={invoice.id} />
-                    <ViewInvoice id={invoice.id} />
+                    <ViewInvoice invoice={invoice} />
                   </div>
                 </td>
               </tr>

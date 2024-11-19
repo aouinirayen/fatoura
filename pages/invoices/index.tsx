@@ -1,9 +1,9 @@
-import { title } from "@/components/primitives"
 import DefaultLayout from "@/layouts/default"
 import InvoicePage from "@/components/ui/invoices/invoice-page"
 import InvoicesTable from "@/components/ui/invoices/table"
 import React, { useState } from "react"
 import { BanknotesIcon, CalendarDaysIcon, CurrencyDollarIcon, EllipsisHorizontalIcon, EnvelopeIcon, UserIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline"
+import { InvoicesData } from "@/data/invoices"
 
 export type Tags = {
   name: string
@@ -25,65 +25,7 @@ export const operatorSymbolsMap = {
 
 export type OperatorType = keyof typeof operatorSymbolsMap
 
-const initialInvoices = [{
-  id: "1",
-  name: "haikel",
-  email: "name@gmail.com",
-  seller_name: "mcdo",
-  amount: 700,
-  image_url: "https://www.google.com",
-  date: new Date(),
-  status: "paid"
-}, {
-  id: "2",
-  name: "haikel",
-  email: "name@gmail.com",
-  seller_name: "mcdo",
-  amount: 700,
-  image_url: "https://www.google.com",
-  date: new Date(),
-  status: "pending"
-}, {
-  id: "3",
-  name: "haikel",
-  email: "name@gmail.com",
-  seller_name: "mcdo",
-  amount: 700,
-  image_url: "https://www.google.com",
-  date: new Date(),
-  status: "pending"
-}, {
-  id: "4",
-  name: "haikel",
-  email: "name@gmail.com",
-  seller_name: "mcdo",
-  amount: 700,
-  image_url: "https://www.google.com",
-  date: new Date(),
-  status: "pending"
-},
-  {
-    id: "5",
-    name: "haikel",
-    email: "name@gmail.com",
-    seller_name: "mcdo",
-    amount: 200,
-    image_url: "https://www.google.com",
-    date: new Date(),
-    status: "paid"
-  },
-  {
-    id: "6",
-    name: "haikel",
-    email: "name@gmail.com",
-    seller_name: "mcdo",
-    amount: 200,
-    image_url: "https://www.google.com",
-    date: new Date(),
-    status: "paid"
-  }
-]
-
+const initialInvoices = InvoicesData
 const InitialTags: Tags = [
   {
     name: "amount",

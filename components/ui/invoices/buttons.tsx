@@ -12,6 +12,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 import { Button } from "@nextui-org/react";
 import {Tooltip} from "@nextui-org/tooltip";
+import { InvoiceType } from "@/types/Invoice";
 interface FilterInvoiceProps {
   show: () => void,
   setFilter?: (value: (((prevState: {}) => {}) | {})) => void,
@@ -97,10 +98,10 @@ export function SendInvoice({ id }: { id: string }) {
   );
 }
 
-export function ViewInvoice({ id }: { id: string }) {
+export function ViewInvoice({ invoice }: { invoice: InvoiceType }) {
   return (
     <Tooltip color="danger" content={"View"} className="capitalize">
-      <Link className="rounded-md border p-2 hover:bg-gray-100" href={`/dashboard/invoices/${id}/detail`}>
+      <Link className="rounded-md border p-2 hover:bg-gray-100" href={`/invoices/${invoice.id}?invoice=${JSON.stringify(invoice)}`}>
         <EyeIcon className="w-5" />
       </Link>
     </Tooltip>
