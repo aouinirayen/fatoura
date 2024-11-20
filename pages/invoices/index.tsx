@@ -3,7 +3,7 @@ import InvoicePage from "@/components/ui/invoices/invoice-page"
 import InvoicesTable from "@/components/ui/invoices/table"
 import React, { useState } from "react"
 import { BanknotesIcon, CalendarDaysIcon, CurrencyDollarIcon, EllipsisHorizontalIcon, EnvelopeIcon, UserIcon, UsersIcon, XMarkIcon } from "@heroicons/react/24/outline"
-import { InvoicesData } from "@/data/invoices"
+import { invoices } from "@/data/invoices"
 
 export type Tags = {
   name: string
@@ -25,7 +25,7 @@ export const operatorSymbolsMap = {
 
 export type OperatorType = keyof typeof operatorSymbolsMap
 
-const initialInvoices = InvoicesData
+const initialInvoices = invoices
 const InitialTags: Tags = [
   {
     name: "amount",

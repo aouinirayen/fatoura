@@ -1,5 +1,6 @@
 "use client"
 import InvoiceDetailsTable from '@/components/ui/invoices/InvoiceDetailsTable'
+import InvoiceTabs from '@/components/ui/invoices/InvoiceTabs'
 import DefaultLayout from '@/layouts/default'
 import { InvoiceType } from '@/types/Invoice'
 import dynamic from 'next/dynamic'
@@ -25,7 +26,16 @@ function InvoiceDtails() {
                 Invoice Details
             </h1>
             <hr className="my-4" />
-            <div className="flex gap-2 justify-between max-sm:flex-col-reverse max-sm:gap-4 max-lg:justify-center flex-wrap-reverse">
+            <InvoiceTabs invoice={invoiceDetails} />
+        </div>
+    </DefaultLayout>
+  )
+}
+
+export default InvoiceDtails
+
+/**
+<div className="flex gap-2 justify-between max-sm:flex-col-reverse max-sm:gap-4 max-lg:justify-center flex-wrap-reverse">
                 <div className="flex gap-8 max-sm:flex-col flex-wrap justify-center">
                     <div className="flex flex-col gap-2">
                         <span className="text-default-600">
@@ -102,9 +112,4 @@ function InvoiceDtails() {
                     </div>
                 </div>
             </div>
-        </div>
-    </DefaultLayout>
-  )
-}
-
-export default InvoiceDtails
+ */
