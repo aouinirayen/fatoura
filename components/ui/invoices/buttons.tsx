@@ -87,14 +87,11 @@ export function ResetFilters({ onClick }: { onClick: () => void }) {
 
 export function SendInvoice({ id }: { id: string }) {
   return (
-    <form>
       <Tooltip color="primary" content={"Send"} className="capitalize">
-        <button className="rounded-md border p-2 hover:bg-gray-100">
-          <span className="sr-only">Delete</span>
+        <Link href={`/invoices/sendEmail`} className="rounded-md border p-2 hover:bg-gray-100">
           <PaperAirplaneIcon className="w-5" />
-        </button>
+        </Link>
       </Tooltip>
-    </form>
   );
 }
 
