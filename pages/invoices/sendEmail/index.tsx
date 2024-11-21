@@ -1,8 +1,11 @@
 import MerchantDropdown from '@/components/ui/invoices/SendInvoice/MerchantDropdown'
+import SendEmailModal from '@/components/ui/invoices/SendInvoice/SendEmailModal';
+import SendSMSModal from '@/components/ui/invoices/SendInvoice/SendSMSModal';
 import TransactionDropdown from '@/components/ui/invoices/SendInvoice/TransactionDropdown'
 import DefaultLayout from '@/layouts/default'
-import { ChatBubbleLeftIcon, EnvelopeIcon, PhoneIcon } from '@heroicons/react/24/outline';
-import {Textarea, Button} from "@nextui-org/react";
+import {Textarea} from "@nextui-org/react";
+import {Checkbox} from "@nextui-org/react";
+
 
 
 function sendEmail() {
@@ -27,13 +30,10 @@ function sendEmail() {
                     className="w-full font-semibold"
                     fullWidth
                 />
+                <Checkbox defaultSelected className="font-semibold">Join Receipt</Checkbox>
                 <div className="flex max-sm:flex-col sm:justify-end gap-2">
-                    <Button className="flex items-center whitespace-nowrap gap-1 bg-default-800 text-default-200 font-semibold">
-                        Send SMS <ChatBubbleLeftIcon className="w-4" />
-                    </Button>
-                    <Button className="flex items-center whitespace-nowrap gap-1 bg-purple-500 text-white">
-                        Send Email <EnvelopeIcon className="w-4" />
-                    </Button>
+                    <SendSMSModal />
+                    <SendEmailModal />
                 </div>
             </div>
         </div>
