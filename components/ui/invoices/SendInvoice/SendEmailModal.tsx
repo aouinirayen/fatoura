@@ -11,7 +11,7 @@ export default function SendEmailModal() {
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Button onClick={handleOpen} className="flex items-center whitespace-nowrap gap-1 bg-purple-600 w-full text-white font-semibold">
+        <Button onClick={handleOpen} className="flex items-center whitespace-nowrap gap-1 bg-blue-600 w-full text-white font-semibold">
             Send Email <EnvelopeIcon className="w-4" />
         </Button>
       </div>

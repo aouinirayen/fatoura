@@ -11,7 +11,7 @@ export default function SendSMSModal() {
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Button onClick={handleOpen} className="flex items-center whitespace-nowrap gap-1 bg-default-800 text-default-200 w-full font-semibold">
+        <Button onClick={handleOpen} className="flex items-center whitespace-nowrap gap-1 bg-default-500 text-white w-full font-semibold">
             Send SMS <ChatBubbleLeftIcon className="w-4" />
         </Button>
       </div>
