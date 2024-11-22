@@ -12,11 +12,16 @@ function InputWithSuggestions({suggestions, placeholder}: {suggestions: Array<st
     }
 
     const search = (term: any) => {
-        const filteredResults = suggestions.filter((result) =>
-        result.toLowerCase().includes(term.toLowerCase())
-        )
-
-        setResults(filteredResults)
+        if(term.length === 0 || term === '' ){
+            setResults([])
+        }
+        else{
+            const filteredResults = suggestions.filter((result) =>
+                result.toLowerCase().includes(term.toLowerCase())
+            )
+    
+            setResults(filteredResults)
+        }
     }
 
   return (
@@ -31,9 +36,9 @@ function InputWithSuggestions({suggestions, placeholder}: {suggestions: Array<st
         />
         {
             results.length > 0 &&
-            <ul className="bg-white border rounded-md p-2 shadow-md">
+            <ul className="bg-default-50 text-default-900 border rounded-md p-2 shadow-md">
                 {results.map((result, index) => (
-                    <li className={`${index < results.length - 1 && "border-b"} text-sm py-1 cursor-pointer hover:bg-gray-100/70 font-semibold transition-all duration-150 px-2`} onClick={()=>{setSearchTerm(result); setResults([])}} key={index}>{result}</li>
+                    <li className={`${index < results.length - 1 && "border-b"} text-sm py-1 cursor-pointer hover:bg-default-200/40 font-semibold transition-all duration-150 px-2`} onClick={()=>{setSearchTerm(result); setResults([])}} key={index}>{result}</li>
                 ))}
             </ul>
         }
