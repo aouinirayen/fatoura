@@ -71,9 +71,6 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
               <th scope="col" className="px-3 py-5 font-semibold">
                 Runned by
               </th>
-              <th scope="col" className="relative py-3 pl-6 pr-3">
-                <span>Actions</span>
-              </th>
               {
                 /*
                               <th scope="col" className="relative py-3 pl-6 pr-3">
@@ -112,7 +109,7 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
                   {pricing.Runnedby}
                 </td>
                 <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-start gap-3 text-foreground-600">
+                    <div className="flex justify-end gap-3 text-foreground-600">
                       <RunWorkflow id={pricing.id} />
                       <RestartWorkflow id={pricing.id} />
                       <ViewWorkflow id={pricing.id} />
