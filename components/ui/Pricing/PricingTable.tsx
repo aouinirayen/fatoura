@@ -12,12 +12,12 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
   return (
     <div className="mt-6 flow-root w-full">
       <div className="inline-block min-w-full align-middle">
-        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+        <div className="rounded-lg bg-foreground-50 p-2 md:pt-0">
           <div className="md:hidden">
             {pricings.map((pricing) => (
               <div
                 key={pricing.id}
-                className="mb-3 w-full rounded-md bg-white p-4"
+                className="mb-3 w-full rounded-md bg-foreground-100 p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <PricingStatus status={pricing.workflowStatus} />
