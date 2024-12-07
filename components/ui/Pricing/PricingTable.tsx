@@ -3,11 +3,13 @@ import Image from "next/image";
 import { SendInvoice, ViewInvoice } from "@/components/ui/invoices/buttons";
 import InvoiceStatus from "@/components/ui/invoices/status";
 import { useEffect, useState } from "react";
+import PricingStatus from "./PricingStatus";
+import { CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 export default function PricingTable({pricings}: {pricings: any[]}) {
 
   return (
-    <div className="mt-6 flow-root">
+    <div className="mt-6 flow-root w-full">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
@@ -17,36 +19,26 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <div className="mb-2 flex items-center">
-                      <Image
-                        src={pricing.image_url}
-                        className="mr-2 rounded-full"
-                        width={28}
-                        height={28}
-                        alt={`${pricing.name}'s profile picture`}
-                      />
-                      <p>{pricing.name}</p>
-                    </div>
-                    <p className="text-sm text-gray-500">
-                      {pricing.email}
-                    </p>
-                  </div>
                   <InvoiceStatus status={pricing.status} />
-                </div>
-                <div className="flex w-full items-center justify-between pt-4 pb-4 border-b">
-                  Seller: {pricing.seller_name}
+                  <span className="text-xs">
+                    <ClockIcon className="w-4 h-4" />
+                    {pricing.duration}
+                  </span>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {pricing.amount}
+                      {pricing.name}
                     </p>
-                    <p>{pricing.date.getDate()}</p>
+                    <p>{pricing.createdAt}</p>
                   </div>
-                  <div className="flex justify-end gap-2">
-                    <ViewInvoice invoice={pricing} />
-                  </div>
+                  {
+                    /*
+                    <div className="flex justify-end gap-2">
+                      <ViewInvoice invoice={pricing} />
+                    </div>
+                    */
+                  }
                 </div>
               </div>
             ))}
@@ -58,70 +50,60 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
                 scope="col"
                 className="px-4 py-5 font-medium sm:pl-6"
               >
-                Customer
+                Status
               </th>
               <th scope="col" className="px-3 py-5 font-medium">
-                Email
-              </th>
-              <th
-                scope="col"
-                className="px-4 py-5 font-medium sm:pl-6"
-              >
-                Seller
-              </th>
-              <th scope="col" className="px-3 py-5 font-medium">
-                Amount
-              </th>
-              <th scope="col" className="px-3 py-5 font-medium">
-                Date
+                Runned by
               </th>
               <th scope="col" className="px-3 py-5 font-medium">
                 Status
               </th>
-              <th scope="col" className="relative py-3 pl-6 pr-3">
+              {
+                /*
+                              <th scope="col" className="relative py-3 pl-6 pr-3">
                 <span className="sr-only">Edit</span>
               </th>
+                */
+              }
             </tr>
             </thead>
             <tbody className="bg-white">
-            {pricings.map((pricing) => (
+            {pricings.map((pricing, index) => (
               <tr
-                key={pricing.id}
+                key={index}
                 className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
               >
-                <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src={pricing.image_url}
-                      className="rounded-full"
-                      width={28}
-                      height={28}
-                      alt={`${pricing.name}'s profile picture`}
-                    />
-                    <p>{pricing.name}</p>
-                  </div>
+                <td className="whitespace-nowrap px-3 py-3 flex flex-col w-fit gap-[5px]">
+                  <PricingStatus status={pricing.workflowStatus} />
+                  <span className="text-xs flex items-center flex-nowrap gap-1 font-semibold pl-2 text-gray-500">
+                    <ClockIcon className="w-4 h-4" />
+                    {pricing.duration}
+                  </span>
+                  <span className="text-xs flex items-center flex-nowrap gap-1 font-semibold pl-2 text-gray-500">
+                    <CalendarIcon className="w-4 h-4" />
+                    {pricing.createdAt}
+                  </span>
                 </td>
                 <td className="whitespace-nowrap px-3 py-3">
-                  {pricing.email}
-                </td>
-                <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                  {pricing.seller_name}
+                  {pricing.name}
                 </td>
                 <td className="whitespace-nowrap px-3 py-3">
-                  {pricing.amount}
+                  {pricing.createdAt}
                 </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  {pricing.date.toLocaleDateString()}
-                </td>
-                <td className="whitespace-nowrap px-3 py-3">
-                  <InvoiceStatus status={pricing.status} />
-                </td>
-                <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                  <div className="flex justify-end gap-3">
-                    <SendInvoice id={pricing.id} />
-                    <ViewInvoice invoice={pricing} />
-                  </div>
-                </td>
+                
+                {
+                  /*
+                  <td className="whitespace-nowrap px-3 py-3">
+                    <InvoiceStatus status={pricing.status} />
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-3">
+                      <SendInvoice id={pricing.id} />
+                      <ViewInvoice invoice={pricing} />
+                    </div>
+                  </td>
+                  */
+                }
               </tr>
             ))}
             </tbody>
