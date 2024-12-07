@@ -56,7 +56,7 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
               </div>
             ))}
           </div>
-          <table className="hidden min-w-full text-gray-900 md:table">
+          <table className="hidden min-w-full text-foreground-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
             <tr>
               <th
@@ -83,7 +83,7 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
               }
             </tr>
             </thead>
-            <tbody className="bg-white">
+            <tbody className="bg-foreground-50">
             {pricings.map((pricing, index) => (
               <tr
                 key={index}
@@ -91,11 +91,11 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
               >
                 <td className="whitespace-nowrap px-3 py-3 flex flex-col w-fit gap-[5px]">
                   <PricingStatus status={pricing.workflowStatus} />
-                  <span className="text-xs flex items-center flex-nowrap gap-1 font-semibold pl-2 text-gray-500">
+                  <span className="text-xs flex items-center flex-nowrap gap-1 font-semibold pl-2 text-foreground-500">
                     <ClockIcon className="w-4 h-4" />
                     {pricing.duration}
                   </span>
-                  <span className="text-xs flex items-center flex-nowrap gap-1 font-semibold pl-2 text-gray-500">
+                  <span className="text-xs flex items-center flex-nowrap gap-1 font-semibold pl-2 text-foreground-500">
                     <CalendarIcon className="w-4 h-4" />
                     {pricing.createdAt}
                   </span>
@@ -108,11 +108,11 @@ export default function PricingTable({pricings}: {pricings: any[]}) {
                     {pricing.workflowID}  
                   </p>
                 </td>
-                <td className="px-3 py-3 text-gray-600 font-semibold">
+                <td className="px-3 py-3 text-foreground-600 font-semibold">
                   {pricing.Runnedby}
                 </td>
                 <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-start gap-3">
+                    <div className="flex justify-start gap-3 text-foreground-600">
                       <RunWorkflow id={pricing.id} />
                       <RestartWorkflow id={pricing.id} />
                       <ViewWorkflow id={pricing.id} />
